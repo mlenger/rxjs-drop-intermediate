@@ -1,14 +1,16 @@
 import { Observable } from 'rxjs';
 
+type Timeout = ReturnType<typeof setTimeout>;
+
 export function dropIntermediate() {
   return function <T>(source: Observable<T>): Observable<T> {
     return new Observable((subscriber) => {
-      let updateEvent: number | undefined;
+      let updateEvent: Timeout | undefined;
       let nextValue: T | undefined;
       let complete = false;
       let error: unknown;
 
-      function scheduleUpdate(value: T): number {
+      function scheduleUpdate(value: T): Timeout {
         return setTimeout(() => {
           let currentValue = nextValue ?? value;
           while (currentValue !== undefined) {
