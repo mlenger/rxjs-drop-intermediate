@@ -52,14 +52,21 @@ jobs:
       - run: npm run cov:send
 
 workflows:
-  build:
+  untagged-build:
     jobs:
       - node-16
       - node-latest
-      - publish:
+  tagged-build:
+    jobs:
+      - node-16:
           filters:
             tags:
-              only:
-                - /v\d+\.\d+\.\d+/
+              only: /.*/
+      - publish:
           requires:
             - node-16
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
