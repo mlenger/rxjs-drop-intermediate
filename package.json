@@ -8,7 +8,7 @@
   "repository": "https://github.com/mlenger/rxjs-drop-intermediate",
   "license": "MIT",
   "author": {"name": "Markus Lenger", "email": "markus@clacks.net"},
-  "keywords": [],
+  "keywords": ["rxjs", "congestion"],
   "scripts": {
     "build": "run-p build:*",
     "build:main": "tsc -p tsconfig.json",
