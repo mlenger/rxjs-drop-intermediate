@@ -1,7 +1,7 @@
 # https://circleci.com/docs/2.0/language-javascript/
-version: 2
+version: 2.1
 jobs:
-  'node-16':
+  node-16:
     docker:
       - image: circleci/node:16
     steps:
@@ -19,7 +19,21 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
       - run: npm test
       - run: npm run cov:send
-  'node-latest':
+      - persist_to_workspace:
+          root: .
+          paths:
+            - 'build'
+
+  publish:
+    docker:
+      - image: circleci/node:16
+    steps:
+      - attach_workspace:
+          at: .
+      - run: node tools/set_version.js
+      - run: npm publish --dry-run
+
+  node-latest:
     docker:
       - image: circleci/node:latest
     steps:
@@ -37,8 +51,17 @@ jobs:
       - run: npm run cov:send
 
 workflows:
-  version: 2
   build:
     jobs:
-      - 'node-16'
-      - 'node-latest'
+      - node-16
+      - node-latest
+      - publish:
+          filters:
+            branches:
+              only:
+                - master
+            tags:
+              only:
+                - /v\d+\.\d+\.\d+/
+          requires:
+            - node-16

@@ -8,7 +8,8 @@
     "build",
     "coverage",
     "jest.config.js",
-    "integration-test"
+    "integration-test",
+    "tools"
   ],
   "plugins": ["import", "eslint-comments"],
   "extends": [
