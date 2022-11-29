@@ -7,6 +7,6 @@ RxJS operator to prevent congestion by dropping intermediate values. This can be
 
 Usage:
 
-    import { dropIntermediate } from 'rxjx-drop-intermediate';
+    import { dropIntermediate } from 'rxjs-drop-intermediate';
 
     const droppingObservable = source.pipe(dropIntermediate());
