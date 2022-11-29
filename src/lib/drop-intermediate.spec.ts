@@ -1,4 +1,4 @@
-import { Subject } from 'rxjs';
+import { lastValueFrom, Subject } from 'rxjs';
 import { tap, toArray } from 'rxjs/operators';
 
 import { dropIntermediate } from './drop-intermediate';
@@ -43,8 +43,8 @@ describe('dopIntermediate', () => {
 
   it('should allow recursion', async () => {
     const subject = new Subject<number>();
-    const actualPromise = subject
-      .pipe(
+    const actualPromise = lastValueFrom(
+      subject.pipe(
         dropIntermediate(),
         tap((v) => {
           if (v < 2) {
@@ -55,7 +55,7 @@ describe('dopIntermediate', () => {
         }),
         toArray()
       )
-      .toPromise();
+    );
 
     setTimeout(() => subject.next(0));
     const actual = await actualPromise;
@@ -67,8 +67,8 @@ describe('dopIntermediate', () => {
     let actual: unknown | undefined;
     const subject = new Subject<number>();
     const error = new Error('Test');
-    const actualPromise = subject
-      .pipe(
+    const actualPromise = lastValueFrom(
+      subject.pipe(
         dropIntermediate(),
         tap((v) => {
           if (v < 2) {
@@ -78,9 +78,37 @@ describe('dopIntermediate', () => {
           }
         })
       )
-      .toPromise();
+    );
 
     setTimeout(() => subject.next(0));
+    try {
+      await actualPromise;
+    } catch (e) {
+      actual = e;
+    }
+
+    expect(actual).toBe(error);
+  });
+
+  it('should allow immediate completion', async () => {
+    const subject = new Subject<number>();
+    const actualPromise = lastValueFrom(
+      subject.pipe(dropIntermediate(), toArray())
+    );
+
+    subject.complete();
+    const actual = await actualPromise;
+
+    expect(actual).toEqual([]);
+  });
+
+  it('should forward immediate errors correctly', async () => {
+    let actual: unknown | undefined;
+    const subject = new Subject<number>();
+    const error = new Error('Test');
+    const actualPromise = lastValueFrom(subject.pipe(dropIntermediate()));
+
+    subject.error(error);
     try {
       await actualPromise;
     } catch (e) {
@@ -94,8 +122,8 @@ describe('dopIntermediate', () => {
     const actual = [];
     const subject = new Subject<number>();
     const error = new Error('Test');
-    const actualPromise = subject
-      .pipe(
+    const actualPromise = lastValueFrom(
+      subject.pipe(
         dropIntermediate(),
         tap((v) => {
           actual.push(v);
@@ -109,7 +137,7 @@ describe('dopIntermediate', () => {
           }
         })
       )
-      .toPromise();
+    );
 
     setTimeout(() => subject.next(0));
     try {
