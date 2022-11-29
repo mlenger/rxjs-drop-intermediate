@@ -7,6 +7,27 @@ RxJS operator to prevent congestion by dropping intermediate values. This can be
 
 Usage:
 
-    import { dropIntermediate } from 'rxjs-drop-intermediate';
+```typescript
+import { dropIntermediate } from 'rxjs-drop-intermediate';
 
-    const droppingObservable = source.pipe(dropIntermediate());
+const droppingObservable = source.pipe(dropIntermediate());
+```
+
+Example taken from integration tests:
+
+```typescript
+const subject = new Subject<string>();
+webSocket.onmessage = (m) => subject.next(m.data.toLocaleString());
+const actual = await firstValueFrom(
+  subject.pipe(
+    dropIntermediate(),
+    map((v) => parseInt(v)),
+    tap(() => execSync('sleep 2')),
+    take(2),
+    toArray(),
+    map((a) => a[1] - a[0])
+  )
+);
+
+expect(actual).toBeGreaterThan(5);
+```
