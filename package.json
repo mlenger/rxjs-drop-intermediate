@@ -1,12 +1,13 @@
 {
   "name": "rxjs-drop-intermediate",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "operator to prevent congestion by dropping intermediate values",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
   "module": "build/module/index.js",
   "repository": "https://github.com/mlenger/rxjs-drop-intermediate",
   "license": "MIT",
+  "author": {"name": "Markus Lenger", "email": "markus@clacks.net"},
   "keywords": [],
   "scripts": {
     "build": "run-p build:*",
@@ -41,7 +42,7 @@
     "node": ">=10"
   },
   "peerDependencies": {
-    "rxjs": "^7.5.7"
+    "rxjs": ">=6.0.0"
   },
   "devDependencies": {
     "@ava/typescript": "^1.1.1",
