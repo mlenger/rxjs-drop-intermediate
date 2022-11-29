@@ -32,7 +32,7 @@ jobs:
       - attach_workspace:
           at: .
       - run: node tools/set_version.js
-      - run: npm publish --dry-run
+      - run: npm publish
 
   node-latest:
     docker:
