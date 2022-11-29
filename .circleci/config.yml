@@ -62,6 +62,8 @@ workflows:
           filters:
             tags:
               only: /.*/
+            branches:
+              ignore: /.*/
       - publish:
           requires:
             - node-16

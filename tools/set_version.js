@@ -1,12 +1,11 @@
 const fs = require('fs');
 
 const version = process.env.CIRCLE_TAG;
-const VERSION_REGEX = /^\d+\.\d+\.\d+$/;
+const VERSION_REGEX = /^v(\d+\.\d+\.\d+)$/;
 if (!VERSION_REGEX.test(version)) {
-  console.log('Invalid version string');
-  return 1;
+  throw new Error('Invalid version string');
 }
 
 const package = JSON.parse(fs.readFileSync('package.json'));
-package.version = version;
+package.version = VERSION_REGEX.exec(version)[1];
 fs.writeFileSync('package.json', JSON.stringify(package, null, 2));
