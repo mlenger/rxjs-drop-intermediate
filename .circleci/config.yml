@@ -57,9 +57,6 @@ workflows:
       - node-latest
       - publish:
           filters:
-            branches:
-              only:
-                - master
             tags:
               only:
                 - /v\d+\.\d+\.\d+/
